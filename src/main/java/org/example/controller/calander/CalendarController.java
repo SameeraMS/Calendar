@@ -3,6 +3,7 @@ package org.example.controller.calander;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -13,6 +14,9 @@ import javafx.scene.text.Text;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.*;
+
+import static javafx.scene.paint.Color.WHITE;
+import static javafx.scene.paint.Color.color;
 
 public class CalendarController implements Initializable {
 
@@ -55,7 +59,7 @@ public class CalendarController implements Initializable {
 
         double calendarWidth = calendar.getPrefWidth();
         double calendarHeight = calendar.getPrefHeight();
-        double strokeWidth = 1;
+        double strokeWidth = 2;
         double spacingH = calendar.getHgap();
         double spacingV = calendar.getVgap();
 
@@ -75,7 +79,7 @@ public class CalendarController implements Initializable {
 
                 Rectangle rectangle = new Rectangle();
                 rectangle.setFill(Color.TRANSPARENT);
-                rectangle.setStroke(Color.BLACK);
+                rectangle.setStroke(WHITE);
                 rectangle.setStrokeWidth(strokeWidth);
                 double rectangleWidth =(calendarWidth/7) - strokeWidth - spacingH;
                 rectangle.setWidth(rectangleWidth);
@@ -90,6 +94,7 @@ public class CalendarController implements Initializable {
                         Text date = new Text(String.valueOf(currentDate));
                         double textTranslationY = - (rectangleHeight / 2) * 0.5;
                         date.setTranslateY(textTranslationY);
+                        date.setFill(WHITE);
                         stackPane.getChildren().add(date);
 
                         List<CalendarActivity> calendarActivities = calendarActivityMap.get(currentDate);
@@ -98,7 +103,7 @@ public class CalendarController implements Initializable {
                         }
                     }
                     if(today.getYear() == dateFocus.getYear() && today.getMonth() == dateFocus.getMonth() && today.getDayOfMonth() == currentDate){
-                        rectangle.setStroke(Color.RED);
+                        rectangle.setStroke(Color.DARKRED);
                     }
                 }
                 calendar.getChildren().add(stackPane);
@@ -111,7 +116,7 @@ public class CalendarController implements Initializable {
         for (int k = 0; k < calendarActivities.size(); k++) {
             if(k >= 2) {
                 Text moreActivities = new Text("...");
-              //  calendarActivityBox.getChildren().add(moreActivities);
+                calendarActivityBox.getChildren().add(moreActivities);
                 moreActivities.setOnMouseClicked(mouseEvent -> {
                     //On ... click print all activities for given date
                     System.out.println(calendarActivities);
@@ -119,16 +124,17 @@ public class CalendarController implements Initializable {
                 break;
             }
             Text text = new Text(calendarActivities.get(k).getClientName() + ", " + calendarActivities.get(k).getDate().toLocalTime());
-           // calendarActivityBox.getChildren().add(text);
+            calendarActivityBox.getChildren().add(text);
             text.setOnMouseClicked(mouseEvent -> {
                 //On Text clicked
                 System.out.println(text.getText());
+                new Alert(Alert.AlertType.INFORMATION, text.getText()).showAndWait();
             });
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
         calendarActivityBox.setMaxWidth(rectangleWidth * 0.3);
         calendarActivityBox.setMaxHeight(rectangleHeight * 0.3);
-     //  calendarActivityBox.setStyle("-fx-background-color:GRAY");
+       calendarActivityBox.setStyle("-fx-background-color:GRAY");
         stackPane.getChildren().add(calendarActivityBox);
     }
 
